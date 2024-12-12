@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}PharmaHelp{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<style>
+    .popup-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        background-color: #28a745;
+        color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1000;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    .popup-message.fade-out {
+        opacity: 0;
+    }
+</style>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <!-- Add your navigation here -->
+    </nav>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        function showPopup(message) {
+            // Create popup element
+            const popup = document.createElement('div');
+            popup.className = 'popup-message';
+            popup.textContent = message;
+            document.body.appendChild(popup);
+    
+            // Set timeout to start fade out
+            setTimeout(() => {
+                popup.classList.add('fade-out');
+            }, 4500);  // Start fade out after 4.5 seconds
+    
+            // Remove the element after animation
+            setTimeout(() => {
+                popup.remove();
+            }, 5000);  // Remove after 5 seconds
+        }
+    </script>
+    
+
+</body>
+</html>

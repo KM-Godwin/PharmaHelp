@@ -1,0 +1,23 @@
+A system to store the stock of medicine, perform operations on the stock i.e. adding, removing or replacing, with each sale of the day. It should read the barcode of a drug and know what type it is. 
+
+Objective:
+Make stock taking a lot easier(main)
+	other objectives:
+ - Check availability of medicine,
+ - Compute the worth of medicine
+ - Perform invoices on drugs sold
+ - Manage payment taken during the day(classify between mpesa and cash)
+ # The above should be specified while selling the drug.
+ # Use query filtered search to display the amount paid in cash and in e-cash
+ # For ease of payment, create a qr code scanner to automatically send an stk push to mpesa (optional)(put after prototype is done)
+
+
+Requirements:
+- A scanner(use a camera instead)
+- A good computer(4gb of ram will suffice, internet connectivity)
+- A good sql database
+- A well set connection between the system and database
+
+
+I will use django for this project. Try as much as possible to make each objective a module working on its own
+ 

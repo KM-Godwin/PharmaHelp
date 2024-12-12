@@ -1,0 +1,16 @@
+The landing page should entail of the system's name and giving a brief overview of all its functionalities.
+The use of python should allow you to make subclasses which will work on their own. Give each its own page
+Therefore for every system "function" There'll be a page for it
+The system allows two types of users to run it: an administrator and a local user
+An administrator can modify most of the system details i.e. drug price, add stock bought, remove stock sold etc
+A local user can only use the system to manage day to day sales
+Details for them will be read only. The input required from them is the type of drug sold, its amount, and specify if payment is through e-cash.(Mpesa mostly)
+Data for e-cash payment shall be handled by creating a well designed table, categorising information daily for all transactions processed in the system. The system should automatically recognise the payment once it is done. Therefore, a web hook should be best for such. I guess
+
+To keep track of how my database looks like, I installed Django extensions and Graphviz for this functionality
+The code to run it is:
+	python manage.py graph_models -a -o my_project_visualized.png    then  
+	python manage.py show_urls
+
+
+Every change in the models.py file leads to a change in the admin.py file

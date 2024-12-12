@@ -1,0 +1,116 @@
+<!-- templates/sales/sales_page.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .popup-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        background-color: #28a745;
+        color: white;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        z-index: 1000;
+        opacity: 1;
+        transition: opacity 0.5s ease-in-out;
+    }
+
+    .popup-message.fade-out {
+        opacity: 0;
+    }
+</style>
+
+<script>
+    function showPopup(message) {
+        // Create popup element
+        const popup = document.createElement('div');
+        popup.className = 'popup-message';
+        popup.textContent = message;
+        document.body.appendChild(popup);
+
+        // Set timeout to start fade out
+        setTimeout(() => {
+            popup.classList.add('fade-out');
+        }, 4500);  // Start fade out after 4.5 seconds
+
+        // Remove the element after animation
+        setTimeout(() => {
+            popup.remove();
+        }, 5000);  // Remove after 5 seconds
+    }
+</script>
+
+<div class="container">
+    <h2>Drug Sales</h2>
+    
+    <!-- Search Form -->
+    <form method="GET" class="mb-4">
+        <div class="input-group">
+            <input type="text" name="search" class="form-control" 
+                   placeholder="Search drugs..." value="{{ search_query }}">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+    </form>
+
+    <!-- Sales Form -->
+    <form id="saleForm" method="POST" action="{% url 'process_sale' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label>Select Drug:</label>
+            <select name="drug" class="form-control" required>
+                {% for drug in drugs %}
+                    <option value="{{ drug.id }}">
+                        {{ drug.name }} - Price: ${{ drug.price }} 
+                        (Available: {{ drug.quantity }})
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>Quantity:</label>
+            <input type="number" name="quantity" class="form-control" 
+                   required min="1">
+        </div>
+
+        <div class="form-group">
+            <label>Payment Method:</label>
+            <select name="payment_method" class="form-control" required>
+                <option value="CASH">Cash</option>
+                <option value="MPESA">M-Pesa</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">Process Sale</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('saleForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        fetch(this.action, {
+            method: 'POST',
+            body: new FormData(this),
+            headers: {
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                showPopup(data.message);
+                // Optionally reset the form
+                this.reset();
+            } else {
+                showPopup(data.message);
+            }
+        })
+        .catch(error => {
+            showPopup('An error occurred while processing the sale');
+        });
+    });
+    </script>
+{% endblock %}

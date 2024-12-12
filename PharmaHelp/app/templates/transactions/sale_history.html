@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container">
+    <h2>Sales History</h2>
+    
+    <!-- Filter Section -->
+    <div class="filters mb-4">
+        <form method="get" class="form-inline">
+            {% if is_admin %}
+            <select name="user_id" class="form-control mr-2">
+                <option value="">All Users</option>
+                {% for user in users %}
+                <option value="{{ user.id }}" {% if selected_user.id == user.id %}selected{% endif %}>
+                    {{ user.username }}
+                </option>
+                {% endfor %}
+            </select>
+            {% endif %}
+            
+            <select name="payment_method" class="form-control mr-2">
+                <option value="">All Payment Methods</option>
+                <option value="mpesa" {% if payment_method == 'mpesa' %}selected{% endif %}>MPESA Only</option>
+            </select>
+            
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+    </div>
+
+    <!-- sales Table -->
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Drug</th>
+                    <th>Quantity</th>
+                    <th>Payment Method</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sale in sales %}
+                <tr>
+                    <td>{{ sale.date }}</td>
+                    <td>{{ sale.drug.name }}</td>
+                    <td>{{ sale.quantity }}</td>
+                    <td>{{ sale.payment_method }}</td>
+                    <td>{{ sale.quantity|multiply:sale.drug.price|floatformat:2 }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Total Sales -->
+    <div class="text-right mt-4">
+        <h4>Total Sales: KES {{ total_sales|floatformat:2|intcomma }}</h4>
+    </div>
+
+    <!-- Pagination -->
+    {% if is_paginated %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if payment_method %}&payment_method={{ payment_method }}{% endif %}{% if selected_user %}&user_id={{ selected_user.id }}{% endif %}">Previous</a>
+            </li>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if payment_method %}&payment_method={{ payment_method }}{% endif %}{% if selected_user %}&user_id={{ selected_user.id }}{% endif %}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

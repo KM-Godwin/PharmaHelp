@@ -1,0 +1,9 @@
+After logging in, the user should be directed to a page where he or she only requires to 
+- search for drugs in the system
+- specify the amount to be bought
+- if payment is via cash or mpesa
+- automatically update changes in the system
+- after each sale, all necessary details should be stored in a sales folder
+
+
+The sales folder should be able to be categorised by days, weeks or months as the user wishes(Admin only)

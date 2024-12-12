@@ -1,0 +1,116 @@
+I'll help you create a transaction history page that connects with the Sale model. Here's how you can implement this:
+
+First, create a view in views.py:
+
+from django.views.generic import ListView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from .models import Sale
+
+class TransactionHistoryView(LoginRequiredMixin, ListView):
+    model = Sale
+    template_name = 'transaction_history.html'
+    context_object_name = 'transactions'
+    paginate_by = 20  # Number of transactions per page
+
+    def get_queryset(self):
+        # Show only transactions for the logged-in user
+        return Sale.objects.filter(user=self.request.user)
+
+Copy
+
+Insert at cursor
+python
+Create a template transaction_history.html:
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Transaction History</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Drug</th>
+                <th>Quantity</th>
+                <th>Payment Method</th>
+                <th>Total Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.date|date:"Y-m-d H:i" }}</td>
+                <td>{{ transaction.drug.name }}</td>
+                <td>{{ transaction.quantity }}</td>
+                <td>{{ transaction.get_payment_method_display }}</td>
+                <td>{{ transaction.total_amount }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5">No transactions found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if is_paginated %}
+    <nav>
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}
+
+Copy
+
+Insert at cursor
+html
+Add the URL pattern in urls.py:
+
+from django.urls import path
+from .views import TransactionHistoryView
+
+urlpatterns = [
+    # ... your other URL patterns ...
+    path('transactions/', TransactionHistoryView.as_view(), name='transaction_history'),
+]
+
+Copy
+
+Insert at cursor
+python
+Add the link to your home page template:
+
+<a href="{% url 'transaction_history' %}" class="btn btn-primary">View Transaction History</a>
+
+Copy
+
+Insert at cursor
+html
+This implementation:
+
+Uses Django's class-based ListView for efficient handling of transaction records
+
+Includes pagination to handle large numbers of transactions
+
+Shows only transactions for the logged-in user (LoginRequiredMixin ensures authentication)
+
+Displays transaction details in a table format
+
+Includes date, drug name, quantity, payment method, and total amount
+
+Uses the built-in template tag get_payment_method_display to show the human-readable payment method
+
+The transaction history will be protected and only accessible to logged-in users. The table will automatically sort transactions by date (newest first) due to the ordering in the Sale model's Meta class.

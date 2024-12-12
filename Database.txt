@@ -1,0 +1,14 @@
+The database to be used is SQL
+The following shall be stored in the database:
+ - drug ID
+ - drug Category
+ - drug Type(sachets, syrup, tablets, injections... etc)
+ - drug InStock
+*** - drug expiryDate(Specify how many are about to expire soonest)
+ - drug Price per Category
+
+
+Operations to be made with the database:
+1. Retrieving the number in stock. If greater than zero, proceed
+2. Updating the number in stock. Check whether it is a sale or its stock intake.(For sales, reduce the selected no else add)
+3. Pushing values to the database. Although unfamiliar with most API functionalities, Try and implement some here
