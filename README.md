@@ -1,1 +1,1 @@
-Pharmacy stock tracking and sales system
+# A pharmacy stock tracking and sales system
